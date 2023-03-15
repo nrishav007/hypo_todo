@@ -1,5 +1,7 @@
 import * as types from "./ActionTypes";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { AnyAction } from "redux";
+import { AppDispatch } from "../store";
 
 export const getReq =
   (url: string) =>
@@ -20,19 +22,17 @@ export const getReq =
       });
   };
 
-export const postReq =
-  (url: string) =>
-  (dispatch) => {
-    dispatch({type: types.POST_REQUEST});
-    return axios
-      .post(url)
-      .then((r) => {
-        dispatch({ type: types.POST_SUCCESS, payload: r.data });
-      })
-      .catch(() => {
-        dispatch({ type: types.POST_FAILURE });
-      });
-  };
+  export const postReq = (url: string, payload?: any) => async (dispatch: AppDispatch)=> {
+    try {
+      dispatch({ type: types.POST_REQUEST });
+      const response: AxiosResponse = await axios.post(url, payload);
+      const action: AnyAction = { type: types.POST_SUCCESS, payload: response.data };
+      return action;
+    } catch (error) {
+      const action: AnyAction = { type: types.POST_FAILURE };
+      return action;
+    }
+  };  
 
 export const delReq =
   (url: string) => (dispatch: (arg0: { type: string }) => void) => {

@@ -8,6 +8,9 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login } from "../Redux/AuthReducer/Action";
 
 interface LoginFormValues {
   username: string;
@@ -15,7 +18,9 @@ interface LoginFormValues {
 }
 
 const Login = () => {
-  const [values, setValues] = useState<LoginFormValues>({
+  const dispatch=useDispatch();
+  const navigate=useNavigate();
+    const [values, setValues] = useState<LoginFormValues>({
     username: "",
     password: "",
   });
@@ -25,7 +30,8 @@ const Login = () => {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    dispatch<any>(login(`${process.env.REACT_APP_URL}/login`, values));
+    navigate("/")
   };
   return (
     <Center mt={"40px"}>

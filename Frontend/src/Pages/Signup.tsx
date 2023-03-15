@@ -9,29 +9,31 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { postReq } from "../Redux/AppReducer/Action";
-
+import { signup } from "../Redux/AuthReducer/Action";
+import { useNavigate } from "react-router-dom";
 interface LoginFormValues {
   username: string;
   password: string;
   email:string;
-  phone:string;
+  mobile:string;
 }
 
 const Signup = () => {
+  const navigate=useNavigate();
   const [values, setValues] = useState<LoginFormValues>({
     username: "",
     password: "",
     email:"",
-    phone:""
+    mobile:""
   });
   const dispatch=useDispatch();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(postReq(`${process.env.REACT_APP_URL}/signup`,))
+    dispatch<any>(signup(`${process.env.REACT_APP_URL}/signup`, values));
+    navigate("/login")
   };
   return (
     <Center mt={"40px"}>
@@ -76,7 +78,7 @@ const Signup = () => {
               <Input
                 type="number"
                 name="mobile"
-                value={values.phone}
+                value={values.mobile}
                 onChange={handleChange}
                 maxLength={10}
               />

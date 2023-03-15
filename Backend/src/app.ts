@@ -53,9 +53,11 @@ app.post("/login", async (req: Request, res: Response) => {
     interface User {
       _id: string;
       password: string;
-      name: string;
+      username: string;
+      email:string;
+      mobile:number
     }
-    let data: User[] = await UserModel.find({ email: req.body.email });
+    let data: User[] = await UserModel.find({ username: req.body.username });
     let uerPass: any = data[0].password;
     if (data.length <= 0) {
       res.status(200).send({ msg: "User not found" });
@@ -71,7 +73,7 @@ app.post("/login", async (req: Request, res: Response) => {
               res.status(200).send({
                 msg: "User login Successfully",
                 token: token,
-                displayName: data[0].name,
+                displayName: data[0].username,
               });
             }
           );
