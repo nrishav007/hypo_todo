@@ -6,6 +6,13 @@ BackEnd: Mongoose,Express,Node and some other library .
 # Deployed URL
 Frontend: https://hypo-todo.vercel.app <br>
 Backend: https://hypotodo-production.up.railway.app
+# Features
+1: Real time OTP validation in signup page.<br>
+2: Responsive UI using Chakra UI.<br>
+3: Encrypted password store in mongoDB using bcrypt in backend.<br>
+4: Its a multi user application so everyone can see only his/her tasks.<br>
+5: Token system used with JWT in backend.<br>
+6: used redux in frontend to state management.
 # Screenshots
 ![ice_screenshot_20230316-183211](https://user-images.githubusercontent.com/76684171/225637568-2a4b79ff-a76d-4a31-8c8c-a4a92b7c3df5.jpeg)
 ![ice_screenshot_20230316-183237](https://user-images.githubusercontent.com/76684171/225638016-cac25752-3820-4511-b104-0b6c126b8c67.jpeg)
