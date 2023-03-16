@@ -5,7 +5,8 @@ import { Box, Input, Center, Button, Flex, Text,Modal,
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure, } from "@chakra-ui/react";
+  useDisclosure,
+  SimpleGrid, } from "@chakra-ui/react";
 import { FC, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GetReq, PostReq, StatReq } from "../Redux/AppReducer/Action";
@@ -114,18 +115,12 @@ const Home: FC = () => {
         </Box>
         <Button isDisabled={token==""} onClick={handlePostTask}>Add Task</Button>
       </Center>
-      <Flex mt={"30px"} justifyContent={"space-around"}>
+      <SimpleGrid columns={[1,1,2,2]} mt={"30px"}>
+        <Box minWidth={"49%"}>
         <Box fontWeight={"bold"} fontSize={"18px"}>
           Pending
         </Box>
-        <Box fontWeight={"bold"} fontSize={"18px"}>
-          {" "}
-          Finished
-        </Box>
-      </Flex>
-      <Flex mt={"30px"} justifyContent={"space-around"}>
-        <Box h={"400px"} w={"49%"} overflow={"scroll"}>
-          <Box>
+          <Box h={"400px"} overflow={"scroll"}>
             {data.length == 0 ? (
               <Center>
                 <Text>No Pending task</Text>
@@ -169,8 +164,12 @@ const Home: FC = () => {
             )}
           </Box>
         </Box>
-        <Box h={"400px"} w={"49%"} overflow={"scroll"}>
-          <Box>
+        <Box  minW={"49%"} >
+        <Box fontWeight={"bold"} fontSize={"18px"}>
+          {" "}
+          Finished
+        </Box>
+          <Box h={"400px"} overflow={"scroll"}>
             {data.length == 0 ? (
               <Center>
                 <Text>No Finished task</Text>
@@ -197,7 +196,7 @@ const Home: FC = () => {
             )}
           </Box>
         </Box>
-      </Flex>
+      </SimpleGrid>
     </Box>
   );
 };
