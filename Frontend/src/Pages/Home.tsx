@@ -1,5 +1,12 @@
-import { Box, Input, Center, Button, Flex, Text } from "@chakra-ui/react";
-import { FC, useEffect, useRef } from "react";
+import { Box, Input, Center, Button, Flex, Text,Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure, } from "@chakra-ui/react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GetReq, PostReq, StatReq } from "../Redux/AppReducer/Action";
 interface User {
@@ -18,6 +25,7 @@ interface task {
   complete: boolean;
 }
 const Home: FC = () => {
+  const [editID,setEditID]=useState("");
   const dispatch = useDispatch();
   const token: any = useSelector<User>((state) => state.AuthReducer.token);
   const data: any = useSelector<User>((state) => state.AppReducer.userData);
@@ -32,6 +40,7 @@ const Home: FC = () => {
     GetData();
   }, [token]);
   const task = useRef<HTMLInputElement>(null);
+  const newtask = useRef<HTMLInputElement>(null);
   const handlePostTask = () => {
     let payload: object = {
       task: task.current?.value,
@@ -46,24 +55,64 @@ const Home: FC = () => {
     );
   };
   const handleEdit=(id:string)=>{
-
+    setEditID(id);
+    onOpen();
   }
-  const handleStatus=async(id:string)=>{
+  const handleEditTask=async()=>{
+    const payload={
+      task:newtask.current?.value
+    }
     await dispatch<any>(
       StatReq(
-        `${process.env.REACT_APP_URL}/todo/update/${id}`,
-        `bearer ${token}`
+        `${process.env.REACT_APP_URL}/todo/update/${editID}`,
+        `bearer ${token}`,
+        payload
       )
     );
     GetData();
   }
+  const handleStatus=async(id:string)=>{
+    const payload={
+      complete:true
+    }
+    await dispatch<any>(
+      StatReq(
+        `${process.env.REACT_APP_URL}/todo/update/${id}`,
+        `bearer ${token}`,
+        payload
+      )
+    );
+    GetData();
+    onClose();
+  }
+  const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit your task data</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+          <Input ref={newtask} placeholder="Enter Task name" mb={"10px"} />
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme='red' mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button colorScheme='green' mr={3} onClick={handleEditTask}>Update</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      {
+          token==""?<Text color={"red"} mb={"10px"} mt={"-10px"}>Please login first</Text>:null
+        }
       <Center>
+        
         <Box mr={"20px"}>
           <Input ref={task} placeholder="Enter Task name" />
         </Box>
-        <Button onClick={handlePostTask}>Add Task</Button>
+        <Button isDisabled={token==""} onClick={handlePostTask}>Add Task</Button>
       </Center>
       <Flex mt={"30px"} justifyContent={"space-around"}>
         <Box fontWeight={"bold"} fontSize={"18px"}>

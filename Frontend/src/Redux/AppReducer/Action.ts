@@ -1,6 +1,5 @@
 import * as types from "./ActionTypes";
 import axios, { AxiosResponse } from "axios";
-import { AnyAction } from "redux";
 import { AppDispatch } from "../store";
 
 
@@ -39,14 +38,11 @@ export const GetReq = (url: string,token:string) => async (dispatch: AppDispatch
     }
   };  
 
-  export const StatReq = (url: string,token:string) => async (dispatch: AppDispatch)=> {
+  export const StatReq = (url: string,token:string,payload:object) => async (dispatch: AppDispatch)=> {
     try {
       dispatch({ type: types.EDIT_REQUEST });
       const headers={
         Authorization:token
-      }
-      const payload={
-        complete:true
       }
       await axios.patch(url, payload,{
         headers:headers

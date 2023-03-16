@@ -26,9 +26,10 @@ const NavLogout: FC = () => {
         </Box>
       </Center>
       <Center>
-        <Box>
-          <Text>Welcome {name==undefined?"GUEST":name}</Text>
-        </Box>
+        <Flex gap={"10px"}>
+          <Text>Welcome</Text>
+          <Text fontWeight={"600"}>{name==undefined?"GUEST":name}</Text>
+        </Flex>
       </Center>
       <Center>
         <Box cursor={"pointer"} onClick={HandleLogout}>
