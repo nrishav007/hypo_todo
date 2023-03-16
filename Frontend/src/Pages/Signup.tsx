@@ -12,6 +12,7 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
+  useToast,
   ModalCloseButton,
   useDisclosure,
   PinInput,
@@ -21,6 +22,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { signup } from "../Redux/AuthReducer/Action";
 import { useNavigate } from "react-router-dom";
+import { useFirebase } from "../Components/Firebase";
 interface LoginFormValues {
   username: string;
   password: string;
@@ -29,6 +31,7 @@ interface LoginFormValues {
 }
 
 const Signup = () => {
+  const {setUpCaptcha}=useFirebase();
   const navigate = useNavigate();
   const [otp,setotp]=useState("");
   const [values, setValues] = useState<LoginFormValues>({
@@ -38,19 +41,49 @@ const Signup = () => {
     mobile: "",
   });
   const dispatch = useDispatch();
+interface fbase{
+  confirm:any
+}
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const handleSubmitotp=()=>{
-    console.log(otp)
+  const [result, setResult] = useState<fbase>();
+  const toast=useToast();
+  const handleSubmitotp=async()=>{
+    let otps=await result?.confirm(otp);
+    if(otps?.user?.accessToken!==undefined){
+      dispatch<any>(signup(`${process.env.REACT_APP_URL}/signup`, values));
+      toast({
+        title: 'Signup success',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      })
+      navigate("/login")
+    }
+    else{
+      toast({
+        title: 'Incorrect OTP',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+      onClose();
+    }
   }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // dispatch<any>(signup(`${process.env.REACT_APP_URL}/signup`, values));
-    // navigate("/login")
-    onOpen();
+    
+    handleCaptch()
   };
+const handleCaptch=async()=>{
+  await onOpen();
+  const res:any=await setUpCaptcha(values.mobile);
+  console.log(res)
+  setResult(res)
+  
+}
   return (
     <Center mt={"40px"}>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -59,8 +92,11 @@ const Signup = () => {
           <ModalHeader>Enter OTP</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+          <Box id="recaptcha-container"></Box>
             <Center>
               <PinInput otp onChange={(e)=>setotp(e)}>
+                  <PinInputField />
+                  <PinInputField />
                   <PinInputField />
                   <PinInputField />
                   <PinInputField />
@@ -123,10 +159,14 @@ const Signup = () => {
                 maxLength={10}
               />
             </FormControl>
-            <Button type="submit">Login</Button>
+            
+            <Button type="submit">Signup</Button>
           </VStack>
+
         </form>
+                  
       </Box>
+      
     </Center>
   );
 };

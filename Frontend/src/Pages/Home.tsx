@@ -3,6 +3,7 @@ import { Box, Input, Center, Button, Flex, Text,Modal,
   ModalContent,
   ModalHeader,
   ModalFooter,
+  useToast,
   ModalBody,
   ModalCloseButton,
   useDisclosure,
@@ -28,6 +29,7 @@ interface task {
 const Home: FC = () => {
   const [editID,setEditID]=useState("");
   const dispatch = useDispatch();
+  const toast=useToast();
   const token: any = useSelector<User>((state) => state.AuthReducer.token);
   const data: any = useSelector<User>((state) => state.AppReducer.userData);
   const GetData = () => {
@@ -54,6 +56,13 @@ const Home: FC = () => {
         `bearer ${token}`
       )
     );
+    
+    toast({
+      title: 'Task added',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
   };
   const handleEdit=(id:string)=>{
     setEditID(id);
@@ -70,7 +79,14 @@ const Home: FC = () => {
         payload
       )
     );
+    toast({
+      title: 'Task updated',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
     GetData();
+    onClose();
   }
   const handleStatus=async(id:string)=>{
     const payload={
@@ -82,9 +98,16 @@ const Home: FC = () => {
         `bearer ${token}`,
         payload
       )
+      
     );
+    toast({
+      title: 'Task Completed',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
     GetData();
-    onClose();
+    
   }
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (

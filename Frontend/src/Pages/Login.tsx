@@ -4,6 +4,7 @@ import {
   Center,
   FormControl,
   FormLabel,
+  useToast,
   Input,
   VStack,
 } from "@chakra-ui/react";
@@ -20,6 +21,7 @@ interface LoginFormValues {
 const Login = () => {
   const dispatch=useDispatch();
   const navigate=useNavigate();
+  const toast=useToast();
     const [values, setValues] = useState<LoginFormValues>({
     username: "",
     password: "",
@@ -30,8 +32,24 @@ const Login = () => {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch<any>(login(`${process.env.REACT_APP_URL}/login`, values));
+    try {
+      dispatch<any>(login(`${process.env.REACT_APP_URL}/login`, values));
+      toast({
+        title: 'Login success',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      })
     navigate("/")
+    } catch (error) {
+      console.log(error)
+      toast({
+        title: 'Login Error',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+    }
   };
   return (
     <Center mt={"40px"}>
