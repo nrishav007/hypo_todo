@@ -6,6 +6,6 @@ export const POST_REQUEST:string = 'POST_REQUEST';
 export const POST_SUCCESS:string = 'POST_SUCCESS';
 export const POST_FAILURE:string = 'POST_FAILURE';
 
-export const DELETE_REQUEST:string = 'DELETE_REQUEST';
-export const DELETE_SUCCESS:string = 'DELETE_SUCCESS';
-export const DELETE_FAILURE:string = 'DELETE_FAILURE';
+export const EDIT_REQUEST:string = 'EDIT_REQUEST';
+export const EDIT_SUCCESS:string = 'EDIT_SUCCESS';
+export const EDIT_FAILURE:string = 'EDIT_FAILURE';

@@ -17,7 +17,7 @@ const port: number = parseInt(process.env.PORT || "3400");
 app.use(express.json());
 app.use(cors({ origin: "*" }));
 app.use("/user", user);
-app.use("/todo", todo);
+
 app.get("/", async (req: Request, res: Response) => {
   try {
     res.status(200).send("deployed");
@@ -87,7 +87,7 @@ app.post("/login", async (req: Request, res: Response) => {
 });
 
 app.use(auth);
-
+app.use("/todo", todo);
 app.listen(port, () => {
   try {
     database_connection;

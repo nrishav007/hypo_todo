@@ -1,7 +1,7 @@
 import * as types from "./ActionTypes";
 
 interface InitialData {
-  userData: any[];
+  userData: object[];
   isLoading: boolean;
   isError: boolean;
 }
@@ -52,6 +52,7 @@ function Reducer(state = initialState, action: any) {
     case types.POST_SUCCESS: {
       return {
         ...state,
+        userData:state.userData.concat(payload),
         isLoading: false,
         isError: false,
       };
@@ -66,7 +67,7 @@ function Reducer(state = initialState, action: any) {
       };
     }
 
-    case types.DELETE_REQUEST: {
+    case types.EDIT_REQUEST: {
       return {
         ...state,
         isLoading: true,
@@ -74,16 +75,15 @@ function Reducer(state = initialState, action: any) {
       };
     }
 
-    case types.DELETE_SUCCESS: {
+    case types.EDIT_SUCCESS: {
       return {
         ...state,
         isLoading: false,
-        userData: [],
         isError: false,
       };
     }
 
-    case types.DELETE_FAILURE: {
+    case types.EDIT_FAILURE: {
       return {
         ...state,
         isLoading: false,

@@ -3,46 +3,58 @@ import axios, { AxiosResponse } from "axios";
 import { AnyAction } from "redux";
 import { AppDispatch } from "../store";
 
-export const getReq =
-  (url: string) =>
-  (dispatch: (arg0: { type: string; payload?: any }) => void) => {
-    dispatch({ type: types.GET_REQUEST });
-    return axios
-      .get(url)
-      .then((res) => {
-        dispatch({ type: types.GET_SUCCESS, payload: res.data.msg });
-        if (res.data.msg.length > 0) {
-          return "All data collected";
-        } else {
-          return "Data is empty";
-        }
-      })
-      .catch(() => {
-        dispatch({ type: types.GET_FAILURE });
-      });
-  };
 
-  export const postReq = (url: string, payload?: any) => async (dispatch: AppDispatch)=> {
+export const GetReq = (url: string,token:string) => async (dispatch: AppDispatch)=> {
+  try {
+    const headers={
+      Authorization:token
+    }
+    dispatch({ type: types.GET_REQUEST });
+    const response: AxiosResponse = await axios.get(url,{
+      headers:headers
+    });
+    dispatch({ type: types.GET_SUCCESS, payload: response.data.data });
+    return;
+  } catch (error) {
+    console.log(error)
+    dispatch({ type: types.GET_FAILURE });
+    return;
+  }
+}; 
+
+  export const PostReq = (url: string, payload: object,token:string) => async (dispatch: AppDispatch)=> {
     try {
       dispatch({ type: types.POST_REQUEST });
-      const response: AxiosResponse = await axios.post(url, payload);
-      const action: AnyAction = { type: types.POST_SUCCESS, payload: response.data };
-      return action;
+      const headers={
+        Authorization:token
+      }
+      let ax:AxiosResponse=await axios.post(url, payload,{
+        headers:headers
+      });
+      dispatch({ type: types.POST_SUCCESS,payload:ax.data.data });
+      return;
     } catch (error) {
-      const action: AnyAction = { type: types.POST_FAILURE };
-      return action;
+      dispatch({ type: types.POST_FAILURE });
+      return;
     }
   };  
 
-export const delReq =
-  (url: string) => (dispatch: (arg0: { type: string }) => void) => {
-    dispatch({ type: types.DELETE_REQUEST });
-    return axios
-      .delete(url)
-      .then(() => {
-        dispatch({ type: types.DELETE_SUCCESS });
-      })
-      .catch(() => {
-        dispatch({ type: types.DELETE_FAILURE });
+  export const StatReq = (url: string,token:string) => async (dispatch: AppDispatch)=> {
+    try {
+      dispatch({ type: types.EDIT_REQUEST });
+      const headers={
+        Authorization:token
+      }
+      const payload={
+        complete:true
+      }
+      await axios.patch(url, payload,{
+        headers:headers
       });
-  };
+      dispatch({ type: types.EDIT_SUCCESS });
+      return;
+    } catch (error) {
+      dispatch({ type: types.EDIT_FAILURE });
+      return;
+    }
+  }; 

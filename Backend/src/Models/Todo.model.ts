@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, model, Schema } from "mongoose";
+import { Document, Model, model, Schema } from "mongoose";
 
 interface ITodo extends Document {
   task: string;
